@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Required meta tags-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Color theme for statusbar -->
+    <meta name="theme-color" content="#2196f3">
+    <!-- Your app title -->
+    <title>Arlington Nightlife</title>
+    <!-- Path to Framework7 Library CSS -->
+    <link rel="stylesheet" href="packages/core/css/framework7.min.css">
+    <!-- Path to your custom app styles-->
+    <link rel="stylesheet" href="css/my-app.css">
+  </head>
+  <body>
+    <!-- App root element -->
+    <div id="app">
+      <!-- Statusbar overlay -->
+      <div class="statusbar"></div>
+
+      <!-- Your main view, should have "view-main" class -->
+      <div class="view view-main">
+        <!-- Initial Page, "data-name" contains page name -->
+        <div data-name="home" class="page">
+
+          <!-- Top Navbar -->
+          <div class="navbar">
+            <div class="navbar-inner">
+              <div class="title">Arlington Nightlife</div>
+            </div>
+          </div>
+
+          <!-- Toolbar -->
+          <div class="toolbar">
+            <div class="toolbar-inner">
+              <!-- Toolbar links -->
+              <a href="#" class="link">Link 1</a>
+              <a href="#" class="link">Link 2</a>
+            </div>
+          </div>
+
+          <!-- Scrollable page content -->
+          <div class="page-content">
+            <p>Page content goes here</p>
+			
+			<div class="list">
+			  <ul>
+				<!-- Smart select item -->
+				<li>
+				  <!-- Additional "smart-select" class -->
+				  <a href="#" class="item-link smart-select">
+					<!-- select -->
+					<select name="eventSelect">
+					  <option value="happyHours" selected>Happy Hours</option>
+					  <option value="liveMusic">Live Music</option>
+					  <option value="otherEvents">Other Events</option>
+					</select>
+					<div class="item-content" id="events">
+					  <div class="item-inner">
+						<!-- Select label -->
+						<div class="item-title">Event Type</div>
+						<!-- Selected value, not required -->
+						<div class="item-after">Happy Hours</div>
+					  </div>
+					</div>
+				  </a>
+				</li>
+			  </ul>
+			</div>
+			
+			<h3>Happy Hours</h3>
+			
+			<div class="data-table card">
+				<table>
+					<thead>
+						<tr>
+							<th class="label-cell">Restaurant/Bar</th>
+							<th class="label-cell">Start Time</th>
+							<th class="label-cell">End Time</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="label-cell">Liberty Tavern</td>
+							<td class="label-cell">4:00</td>
+							<td class="label-cell">7:00</td>
+						</tr>
+						<tr>
+							<td class="label-cell">Lyon Hall</td>
+							<td class="label-cell">5:00</td>
+							<td class="label-cell">6:30</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+            <!-- Link to another page -->
+            <a href="/about/">About app</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Path to Framework7 Library JS-->
+    <script type="text/javascript" src="packages/core/js/framework7.min.js"></script>
+    <!-- Path to your app js-->
+    <script type="text/javascript" src="my-app.js"></script>
+  </body>
+</html>
