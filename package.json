@@ -4,11 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "http-server . -o -c 1 -a localhost"
+    "serve": "http-server . -o -c 1 -a localhost",
+    "start": "gulp"
   },
   "author": "Mike Englert",
   "license": "ISC",
   "devDependencies": {
+    "gulp": "^3.9.1",
     "http-server": "^0.10.0"
+  },
+  "dependencies": {
+    "gulp-connect": "^5.5.0"
   }
 }
