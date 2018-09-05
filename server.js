@@ -12,7 +12,7 @@ var con = mysql.createConnection({
 
 app.use(express.static(__dirname + '/public' ));
 
-app.get('/blah', function (req, res) { 
+app.get('/events', function (req, res) { 
 	con.query("SELECT * FROM events WHERE type = 'Happy Hour'", function (err, result, fields) {
 		if (err) throw err;
 		console.log(result);
