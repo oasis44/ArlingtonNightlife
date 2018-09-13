@@ -13,7 +13,7 @@ var con = mysql.createConnection({
 app.use(express.static(__dirname + '/public' ));
 
 app.get('/events', function (req, res) { 
-	con.query("SELECT * FROM events WHERE type = 'Happy Hour'", function (err, result, fields) {
+	con.query("SELECT name as venue_name, DATE_FORMAT(start_time, '%l:%i %p') as start_time, DATE_FORMAT(end_time, '%l:%i %p') as end_time FROM events, venues WHERE venues.id = events.venue_id AND type = 'Happy Hour';", function (err, result, fields) {
 		if (err) throw err;
 		console.log(result);
 		res.send(result);

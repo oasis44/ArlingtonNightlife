@@ -1,0 +1,103 @@
+<template>
+	<div class="page" data-name="main">
+
+	  <!-- Top Navbar -->
+	  <div class="navbar">
+		<div class="navbar-inner">
+		  <div class="title">Arlington Nightlife</div>
+		</div>
+	  </div>
+
+	  <!-- Toolbar -->
+	  <div class="toolbar">
+		<div class="toolbar-inner">
+		  <!-- Toolbar links -->
+		  <a href="#" class="link">Link 1</a>
+		  <a href="#" class="link">Link 2</a>
+		</div>
+	  </div>
+
+	  <!-- Scrollable page content -->
+	  <div class="page-content">
+		<p>Page content goes here: {{name}}</p>
+		
+		<div class="list">
+		  <ul>
+			<!-- Smart select item -->
+			<li>
+			  <!-- Additional "smart-select" class -->
+			  <a href="#" class="item-link smart-select">
+				<!-- select -->
+				<select name="eventSelect">
+				  <option value="happyHours" selected>Happy Hours</option>
+				  <option value="liveMusic">Live Music</option>
+				  <option value="otherEvents">Other Events</option>
+				</select>
+				<div class="item-content" id="events">
+				  <div class="item-inner">
+					<!-- Select label -->
+					<div class="item-title">Event Type</div>
+					<!-- Selected value, not required -->
+					<div class="item-after">Happy Hours</div>
+				  </div>
+				</div>
+			  </a>
+			</li>
+		  </ul>
+		</div>
+		
+		<h3>Happy Hours</h3>
+		
+		<div class="data-table card">
+			<table>
+				<thead>
+					<tr>
+						<th class="label-cell">Restaurant/Bar</th>
+						<th class="label-cell">Start Time</th>
+						<th class="label-cell">End Time</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each events}}
+						<tr>
+							<td class="label-cell">{{venue_name}}</td>
+							<td class="label-cell">{{start_time}}</td>
+							<td class="label-cell">{{end_time}}</td>
+						</tr>
+					{{/each}}
+				</tbody>
+			</table>
+		</div>
+		
+		<!-- Link to another page -->
+		<a href="/about/">About app</a>
+	  </div>
+	</div>
+</template>
+<script>
+  return {
+    data: function () {
+      var self = this;
+      var app = self.$app;
+      return {
+		events: []
+      }
+    },
+	on: {
+	  pageInit() {
+		console.log('pageInit');
+		var self = this;
+		
+		Framework7.request.get('/events', function (data) {
+			console.log(data);
+			
+			self.$setState({
+				events: JSON.parse(data)
+			})
+			console.log(self.events);
+		});
+		
+	  }
+	}
+  }
+</script>
