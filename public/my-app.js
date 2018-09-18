@@ -34,11 +34,3 @@ var app = new Framework7({
 mainView = app.views.create('.view-main', {
 	url: '/'
 });
-
-$$(document.body).on('change', "select[name='eventSelect']", function(e){
-	console.log('the real change');
-	
-	Framework7.request.get('/events', function (data) {
-		console.log(data);
-	});
-});
