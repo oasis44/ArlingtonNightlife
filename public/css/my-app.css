@@ -474,3 +474,7 @@ code {
   text-align: center;
   line-height: 100px;
 }
+
+.app-body {
+	margin-left: 5px;
+}

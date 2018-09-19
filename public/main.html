@@ -19,8 +19,7 @@
 
 	  <!-- Scrollable page content -->
 	  <div class="page-content">
-		<p>Page content goes here: {{name}}</p>
-		
+	  
 		<div class="list">
 		  <ul>
 			<!-- Smart select item -->
@@ -46,67 +45,72 @@
 		  </ul>
 		</div>
 		
-		<h3>Happy Hours</h3>
-		
-		<div class="data-table card">
-			<table>
-				<thead>
-					<tr>
-						<th class="label-cell">Restaurant/Bar</th>
-						<th class="label-cell">Start Time</th>
-						<th class="label-cell">End Time</th>
-					</tr>
-				</thead>
-				<tbody>
-					{{#each events}}
+		<div class="app-body">
+			<h3>{{eventType}}</h3>
+			
+			<div class="data-table card">
+				<table>
+					<thead>
 						<tr>
-							<td class="label-cell">{{venue_name}}</td>
-							<td class="label-cell">{{start_time}}</td>
-							<td class="label-cell">{{end_time}}</td>
+							<th class="label-cell">Restaurant/Bar</th>
+							<th class="label-cell">Start Time</th>
+							<th class="label-cell">End Time</th>
 						</tr>
-					{{/each}}
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						{{#each events}}
+							<tr>
+								<td class="label-cell">{{venue_name}}</td>
+								<td class="label-cell">{{start_time}}</td>
+								<td class="label-cell">{{end_time}}</td>
+							</tr>
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+			
+			<!-- Link to another page -->
+			<a href="/about/">About app</a>
 		</div>
-		
-		<!-- Link to another page -->
-		<a href="/about/">About app</a>
 	  </div>
 	</div>
 </template>
 <script>
-  return {
-    data: function () {
-      var self = this;
-      var app = self.$app;
-      return {
-		events: []
-      }
-    },
-	on: {
-	  pageInit() {
-		var self = this;
-		
-		Framework7.request.get('/events', {'eventType': 'Happy Hour'}, function (data) {
-			self.$setState({
-				events: JSON.parse(data)
-			})
-		});
-		
-	  },
-	  pageReinit() {
-		var self = this;
-		
-		$$('select[name="eventSelect"] option:checked').each(function () {
-			var eventType = this.value;
-		
-			Framework7.request.get('/events', {'eventType': eventType}, function (data) {
-				self.$setState({
-					events: JSON.parse(data)
-				})
-			});
-		});
-	  }
+	return {
+		data: function () {
+			var self = this;
+			var app = self.$app;
+			
+			return {
+				events: []
+			}
+		},
+		methods: {
+			fetchEvents() {
+				var self = this;
+				
+				$$('select[name="eventSelect"] option:checked').each(function () {
+					var eventType = this.value;
+					
+					self.$setState({
+						eventType: eventType
+					});
+				
+					Framework7.request.get('/events', {'eventType': eventType}, function (data) {
+						self.$setState({
+							events: JSON.parse(data)
+						})
+					});
+				});
+			}
+		},
+		on: {
+			pageInit() {
+				this.fetchEvents()
+			},
+				pageReinit() {
+				this.fetchEvents()
+			}
+		}
 	}
-  }
 </script>

@@ -17,7 +17,6 @@ var app = new Framework7({
 		{
 			path: '/',
 			async: function (routeTo, routeFrom, resolve, reject) {
-				console.log('in here');
 				resolve({
 				  componentUrl: './main.html'
 				})
