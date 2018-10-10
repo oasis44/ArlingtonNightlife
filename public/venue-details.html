@@ -1,0 +1,66 @@
+<template>
+	<div class="page" data-name="venue-details">
+	  <div class="navbar">
+		<div class="navbar-inner sliding">
+		  <div class="left">
+			<a href="#" class="link back">
+			  <i class="icon icon-back"></i>
+			  <span class="ios-only">Back</span>
+			</a>
+		  </div>
+		  <div class="title">Arlington Nightlife</div>
+		</div>
+	  </div>
+	  <div class="page-content">
+		<div class="block block-strong">
+		  <h3>Venue Details</h3>
+		</div>
+		<div class="block block-strong">
+		  <table>
+			<tr>
+				<td><b>Name:</b></td>
+				<td>{{name}}</td>
+			</tr>
+			<tr>
+				<td><b>Address:</b></td>
+				<td>{{address}}</td>
+			</tr>
+			<tr>
+				<td><b>Phone:</b></td>
+				<td>{{phone}}</td>
+			</tr>
+		   </table>
+		</div>
+	  </div>
+	</div>
+</template>
+<script>
+	return {
+		data: function () {
+			var self = this;
+			var app = self.$app;
+		},
+		methods: {
+			fetchVenueDetails() {
+				var self = this;
+				
+				Framework7.request.get('/venue/' + self.$route.params.venueId,  function (data) {
+					var dataJson = JSON.parse(data);
+					var eventDetails = dataJson[0];
+					
+					console.log(eventDetails);
+					self.$setState({
+						name: eventDetails.name,
+						address: eventDetails.address,
+						phone: eventDetails.phone_num
+					})
+				});
+			}
+		},
+		on: {
+			pageInit() {
+				this.fetchVenueDetails()
+			}
+		}
+	}
+</script>

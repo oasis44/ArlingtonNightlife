@@ -25,6 +25,14 @@ var app = new Framework7({
 		{
 			path: '/about/',
 			url: 'about.html'
+		},
+		{
+			path: '/venues/:venueId',
+			async: function (routeTo, routeFrom, resolve, reject) {
+				resolve({
+				  componentUrl: './venue-details.html'
+				})
+			}
 		}
 	]
 });

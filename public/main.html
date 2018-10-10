@@ -60,7 +60,7 @@
 					<tbody>
 						{{#each events}}
 							<tr>
-								<td class="label-cell">{{venue_name}}</td>
+								<td class="label-cell"><a href="/venues/{{venue_id}}">{{venue_name}}</a></td>
 								<td class="label-cell">{{start_time}}</td>
 								<td class="label-cell">{{end_time}}</td>
 							</tr>
@@ -108,7 +108,7 @@
 			pageInit() {
 				this.fetchEvents()
 			},
-				pageReinit() {
+			pageReinit() {
 				this.fetchEvents()
 			}
 		}
