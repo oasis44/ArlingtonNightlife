@@ -23,8 +23,28 @@ var app = new Framework7({
 			}
 		},
 		{
-			path: '/about/',
-			url: 'about.html'
+			path: '/admin',
+			async: function (routeTo, routeFrom, resolve, reject) {
+				resolve({
+				  componentUrl: './admin.html'
+				})
+			}
+		},
+		{
+			path: '/new-event',
+			async: function (routeTo, routeFrom, resolve, reject) {
+				resolve({
+				  componentUrl: './new-event.html'
+				})
+			}
+		},
+		{
+			path: '/new-venue',
+			async: function (routeTo, routeFrom, resolve, reject) {
+				resolve({
+				  componentUrl: './new-venue.html'
+				})
+			}
 		},
 		{
 			path: '/venues/:venueId',
