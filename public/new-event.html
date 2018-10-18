@@ -15,14 +15,13 @@
 		<div class="block block-strong">
 		  <h3>Add New Event</h3>
 		</div>
-		<div class="list no-hairlines-md">
+		<form class="list no-hairlines-md" id="new-event-form">
 		  <ul>
 			<li>
 			  <div class="item-content item-input">
 				<div class="item-inner">
-				  <div class="item-title item-label">Name</div>
 				  <div class="item-input-wrap">
-					<input type="text" placeholder="Your name"/>
+					<input type="text" name="eventType" placeholder="Event Type" readonly="readonly" id="event-type-picker"/>
 				  </div>
 				</div>
 			  </div>
@@ -30,15 +29,232 @@
 			<li>
 			  <div class="item-content item-input">
 				<div class="item-inner">
-				  <div class="item-title item-label">E-mail</div>
 				  <div class="item-input-wrap">
-					<input type="email" placeholder="E-mail"/>
+					<input type="text" name="venue" placeholder="Venue" readonly="readonly" id="venue-picker"/>
 				  </div>
 				</div>
 			  </div>
 			</li>
+			<li>
+				<div class="item-content item-input">
+					<div class="item-inner">
+					  <div class="item-input-wrap">
+						<input type="text" name="startTime" placeholder="Start Time" readonly="readonly" id="start-time-picker"/>
+					  </div>
+					</div>
+				</div>
+			</li>
+			<li>
+				<div class="item-content item-input">
+					<div class="item-inner">
+					  <div class="item-input-wrap">
+						<input type="text" name="endTime" placeholder="End Time" readonly="readonly" id="end-time-picker"/>
+					  </div>
+					</div>
+				</div>
+			</li>
 		  </ul>
+		</form>
+		<div class="block block-strong">
+			<p class="row">
+				<Button class="col button button-fill form-submit-button">Submit</Button>
+			</p>
 		</div>
 	  </div>
 	</div>
 </template>
+
+<script>
+	return {
+		on: {
+			pageInit() {
+				var eventTypePicker = app.picker.create({
+				  inputEl: '#event-type-picker',
+				  cols: [
+					{
+					  textAlign: 'center',
+					  values: ['Happy Hour', 'Live Music Event', 'Other Event']
+					}
+				  ]
+				});
+				
+				var venueNames = []
+				var venueMap = new Map()
+				
+				Framework7.request.get('/venues', function (data) {
+					var dataJson = JSON.parse(data);
+
+					dataJson.forEach(function(item) {
+						venueNames.push(item.name)
+						venueMap.set(item.name, item.id)
+					});
+				});
+				
+				var venuePicker = app.picker.create({
+				  inputEl: '#venue-picker',
+				  cols: [
+					{
+					  textAlign: 'center',
+					  values: venueNames
+					}
+				  ]
+				});
+				
+				var today = new Date();
+				var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+				
+				var startTimePickerInline = app.picker.create({
+				  inputEl: '#start-time-picker',
+				  toolbar: false,
+				  rotateEffect: true,
+				  value: [
+					today.getMonth(),
+					today.getDate(),
+					today.getFullYear(),
+					today.getHours(),
+					'00'
+				  ],
+				  formatValue: function (values, displayValues) {
+					return months[values[0]] + ' ' + values[1] + ', ' + values[2] + ' ' + values[3] + ':' + values[4];
+				  },
+				  cols: [
+					// Months
+					{
+					  values: ('0 1 2 3 4 5 6 7 8 9 10 11').split(' '),
+					  displayValues: ('January February March April May June July August September October November December').split(' '),
+					  textAlign: 'left'
+					},
+					// Days
+					{
+					  values: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],
+					},
+					// Years
+					{
+					  values: (function () {
+						var arr = [];
+						for (var i = today.getFullYear(); i <= today.getFullYear() + 10; i++) { arr.push(i); }
+						  return arr;
+					  })(),
+					},
+					// Space divider
+					{
+					  divider: true,
+					  content: '&nbsp;&nbsp;'
+					},
+					// Hours
+					{
+					  values: (function () {
+						var arr = [];
+						for (var i = 0; i <= 23; i++) { arr.push(i); }
+						  return arr;
+					  })(),
+					},
+					// Divider
+					{
+					  divider: true,
+					  content: ':'
+					},
+					// Minutes
+					{
+					  values: (function () {
+						var arr = [];
+						for (var i = 0; i <= 59; i++) { arr.push(i < 10 ? '0' + i : i); }
+						  return arr;
+					  })(),
+					}
+				  ],
+				  on: {
+					change: function (picker, values, displayValues) {
+					  var daysInMonth = new Date(picker.value[2], picker.value[0]*1 + 1, 0).getDate();
+					  if (values[1] > daysInMonth) {
+						picker.cols[1].setValue(daysInMonth);
+					  }
+					},
+				  }
+				});
+				
+				var endTimePickerInline = app.picker.create({
+				  inputEl: '#end-time-picker',
+				  toolbar: false,
+				  rotateEffect: true,
+				  value: [
+					today.getMonth(),
+					today.getDate(),
+					today.getFullYear(),
+					today.getHours(),
+					'00'
+				  ],
+				  formatValue: function (values, displayValues) {
+					return months[values[0]] + ' ' + values[1] + ', ' + values[2] + ' ' + values[3] + ':' + values[4];
+				  },
+				  cols: [
+					// Months
+					{
+					  values: ('0 1 2 3 4 5 6 7 8 9 10 11').split(' '),
+					  displayValues: ('January February March April May June July August September October November December').split(' '),
+					  textAlign: 'left'
+					},
+					// Days
+					{
+					  values: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],
+					},
+					// Years
+					{
+					  values: (function () {
+						var arr = [];
+						for (var i = today.getFullYear(); i <= today.getFullYear() + 10; i++) { arr.push(i); }
+						  return arr;
+					  })(),
+					},
+					// Space divider
+					{
+					  divider: true,
+					  content: '&nbsp;&nbsp;'
+					},
+					// Hours
+					{
+					  values: (function () {
+						var arr = [];
+						for (var i = 0; i <= 23; i++) { arr.push(i); }
+						  return arr;
+					  })(),
+					},
+					// Divider
+					{
+					  divider: true,
+					  content: ':'
+					},
+					// Minutes
+					{
+					  values: (function () {
+						var arr = [];
+						for (var i = 0; i <= 59; i++) { arr.push(i < 10 ? '0' + i : i); }
+						  return arr;
+					  })(),
+					}
+				  ],
+				  on: {
+					change: function (picker, values, displayValues) {
+					  var daysInMonth = new Date(picker.value[2], picker.value[0]*1 + 1, 0).getDate();
+					  if (values[1] > daysInMonth) {
+						picker.cols[1].setValue(daysInMonth);
+					  }
+					},
+				  }
+				});
+				
+				$$('.form-submit-button').on('click', function(){
+					var app = new Framework7();
+					var formData = app.form.convertToData('#new-event-form');
+
+					// Replace Venue Name with Venue ID
+					formData.venue = venueMap.get(formData.venue)
+
+					Framework7.request.postJSON('/events', formData, function (data) {
+						mainView.router.navigate('/')
+					});
+				});
+			}
+		}
+	}
+</script>
