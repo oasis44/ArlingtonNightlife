@@ -31,6 +31,14 @@ var app = new Framework7({
 			}
 		},
 		{
+			path: '/login',
+			async: function (routeTo, routeFrom, resolve, reject) {
+				resolve({
+				  componentUrl: './login.html'
+				})
+			}
+		},
+		{
 			path: '/new-event',
 			async: function (routeTo, routeFrom, resolve, reject) {
 				resolve({
