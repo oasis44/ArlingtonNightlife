@@ -1,8 +1,17 @@
 const express = require('express');
 const app = express();
-const path = require('path');
 const mysql = require('mysql');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const errorHandler = require('errorhandler');
+
+//Configure mongoose's promise to global promise
+mongoose.promise = global.Promise;
+
+//Configure isProduction variable
+const isProduction = process.env.NODE_ENV === 'production';
 
 var con = mysql.createConnection({
   host: "localhost",
@@ -15,6 +24,22 @@ app.use(express.static(__dirname + '/public' ));
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+app.use(cors());
+app.use(require('morgan')('dev'));
+app.use(session({ secret: 'passport-tutorial', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
+
+if(!isProduction) {
+  app.use(errorHandler());
+}
+
+//Configure Mongoose
+mongoose.connect('mongodb://localhost/passport-tutorial');
+mongoose.set('debug', true);
+
+require('./models/Users');
+require('./config/passport');
+app.use(require('./routes'));
 
 app.get('/events', function (req, res) { 
 	const eventType = req.query.eventType;
@@ -72,6 +97,31 @@ app.post('/venues', function (req, res) {
 
 con.connect(function(err) {
   if (err) throw err;
+});
+
+//Error handlers & middlewares
+if(!isProduction) {
+	app.use((err, req, res) => {
+		res.status(err.status || 500);
+
+		res.json({
+			errors: {
+				message: err.message,
+				error: err
+			},
+		});
+	});
+}
+
+app.use((err, req, res) => {
+	res.status(err.status || 500);
+
+	res.json({
+		errors: {
+			message: err.message,
+			error: {}
+		},
+	});
 });
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'));
