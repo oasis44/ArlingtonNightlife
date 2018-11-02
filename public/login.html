@@ -17,7 +17,7 @@
 		  <h3>Login</h3>
 		</div>
 		<!-- Login form -->
-		<form>
+		<form id="login-form">
 		  <div class="list">
 			<ul>
 			  <li class="item-content item-input">
@@ -43,7 +43,7 @@
 		  <div class="list">
 			<ul>
 			  <li>
-				<a href="#" class="item-link list-button">Sign In</a>
+				<a href="#" class="item-link list-button login-button">Sign In</a>
 			  </li>
 			</ul>
 			<div class="block-footer">Some text with login information.</div>
@@ -52,3 +52,23 @@
 	  </div>
 	</div>
 </template>
+
+<script>
+	return {
+		on: {
+			pageInit() {
+				$$('.login-button').on('click', function(){
+					var app = new Framework7();
+
+					var formData = {
+						user: app.form.convertToData('#login-form')
+					}
+					
+					Framework7.request.postJSON('/api/users/login', formData, function (data) {
+						mainView.router.navigate('/')
+					});
+				});
+			}
+		}
+	}
+</script>

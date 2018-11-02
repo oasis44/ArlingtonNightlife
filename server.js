@@ -41,7 +41,7 @@ require('./models/Users');
 require('./config/passport');
 app.use(require('./routes'));
 
-app.get('/events', function (req, res) { 
+app.get('/events', function (req, res) {
 	const eventType = req.query.eventType;
 
 	con.query("SELECT venues.id as venue_id, name as venue_name, DATE_FORMAT(start_time, '%l:%i %p') as start_time, DATE_FORMAT(end_time, '%l:%i %p') as end_time FROM events, venues WHERE venues.id = events.venue_id AND type = ?", [eventType], function (err, result, fields) {
@@ -101,7 +101,7 @@ con.connect(function(err) {
 
 //Error handlers & middlewares
 if(!isProduction) {
-	app.use((err, req, res) => {
+	app.use((err, req, res, next) => {
 		res.status(err.status || 500);
 
 		res.json({
@@ -113,7 +113,7 @@ if(!isProduction) {
 	});
 }
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
 	res.status(err.status || 500);
 
 	res.json({
