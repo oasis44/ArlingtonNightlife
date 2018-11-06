@@ -40,7 +40,7 @@
 			fetchVenueDetails() {
 				var self = this;
 				
-				Framework7.request.get('/venue/' + self.$route.params.venueId,  function (data) {
+				Framework7.request.get('/api/venues/' + self.$route.params.venueId,  function (data) {
 					var dataJson = JSON.parse(data);
 					var eventDetails = dataJson[0];
 					

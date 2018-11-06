@@ -81,7 +81,7 @@
 				var venueNames = []
 				var venueMap = new Map()
 				
-				Framework7.request.get('/venues', function (data) {
+				Framework7.request.get('/api/venues', function (data) {
 					var dataJson = JSON.parse(data);
 
 					dataJson.forEach(function(item) {
@@ -250,7 +250,7 @@
 					// Replace Venue Name with Venue ID
 					formData.venue = venueMap.get(formData.venue)
 
-					Framework7.request.postJSON('/events', formData, function (data) {
+					Framework7.request.postJSON('/api/events', formData, function (data) {
 						mainView.router.navigate('/')
 					});
 				});

@@ -65,7 +65,9 @@
 					}
 					
 					Framework7.request.postJSON('/api/users/login', formData, function (data) {
-						mainView.router.navigate('/')
+console.log('inside here')
+console.log(data)
+//						mainView.router.navigate('/')
 					});
 				});
 			}

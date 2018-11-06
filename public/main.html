@@ -96,7 +96,7 @@
 						eventType: eventType
 					});
 				
-					Framework7.request.get('/events', {'eventType': eventType}, function (data) {
+					Framework7.request.get('/api/events', {'eventType': eventType}, function (data) {
 						self.$setState({
 							events: JSON.parse(data)
 						})
