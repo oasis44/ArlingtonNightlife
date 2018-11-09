@@ -12,8 +12,11 @@
 	  <div class="toolbar">
 		<div class="toolbar-inner">
 		  <!-- Toolbar links -->
-		  <a href="/admin" class="link">Administration</a>
-		  <a href="/login" class="link">Login</a>
+		  {{#if loginData}}
+			<a href="/admin" class="link">Administration</a>
+		  {{else}}
+		    <a href="/login" class="link">Login</a>
+		  {{/if}}
 		</div>
 	  </div>
 
@@ -106,6 +109,14 @@
 		},
 		on: {
 			pageInit() {
+				var self = this;
+				var loginData = app.form.getFormData('login')
+
+				if (loginData) {
+					self.$setState({
+						loginData: loginData
+					})
+				}
 				this.fetchEvents()
 			},
 			pageReinit() {

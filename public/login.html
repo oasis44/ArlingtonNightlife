@@ -46,7 +46,9 @@
 				<a href="#" class="item-link list-button login-button">Sign In</a>
 			  </li>
 			</ul>
-			<div class="block-footer">Some text with login information.</div>
+			{{#if loginError}}
+			  <div class="error-message">{{loginError}}</div>
+			{{/if}}
 		  </div>
 		</form>
 	  </div>
@@ -57,6 +59,8 @@
 	return {
 		on: {
 			pageInit() {
+				var self = this;
+			
 				$$('.login-button').on('click', function(){
 					var app = new Framework7();
 
@@ -65,9 +69,14 @@
 					}
 					
 					Framework7.request.postJSON('/api/users/login', formData, function (data) {
-console.log('inside here')
-console.log(data)
-//						mainView.router.navigate('/')
+						app.form.storeFormData('login', data.user)
+						mainView.router.navigate('/')
+					}, function (data) {
+						var response = JSON.parse(data.response)
+						
+						self.$setState({
+							loginError: response.error
+						})
 					});
 				});
 			}
