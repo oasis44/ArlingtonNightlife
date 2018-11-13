@@ -65,9 +65,19 @@
 				$$('.form-submit-button').on('click', function(){
 					var app = new Framework7();
 					var formData = app.form.convertToData('#new-venue-form');
-
-					Framework7.request.postJSON('/api/venues', formData, function (data) {
-						mainView.router.navigate('/')
+					
+					var authHeader = 'Token ' + app.form.getFormData('login').token;
+					
+					Framework7.request({
+						url: '/api/venues',
+						method: 'POST',
+						headers: {
+							'Authorization': authHeader
+						},
+						data: formData,
+						success: function (data) {
+							mainView.router.navigate('/')
+						}
 					});
 				});
 			}

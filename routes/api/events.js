@@ -18,7 +18,7 @@ router.get('/', auth.optional, (req, res, next) => {
 	});
 });
 
-router.post('/', auth.optional, function (req, res, next) { 
+router.post('/', auth.required, function (req, res, next) { 
 	const body = req.body
 	
 	const eventType = body.eventType
