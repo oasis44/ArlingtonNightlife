@@ -54,6 +54,9 @@
 				<Button class="col button button-fill form-submit-button">Submit</Button>
 			</p>
 		</div>
+		{{#if loginError}}
+		  <div class="error-message">{{loginError}}</div>
+		{{/if}}
 	  </div>
 	</div>
 </template>
@@ -62,6 +65,8 @@
 	return {
 		on: {
 			pageInit() {
+				var self = this;
+			
 				$$('.form-submit-button').on('click', function(){
 					var app = new Framework7();
 					var formData = app.form.convertToData('#new-venue-form');
@@ -77,6 +82,13 @@
 						data: formData,
 						success: function (data) {
 							mainView.router.navigate('/')
+						},
+						error: function (xhr, status) {
+							var responseObj = JSON.parse(xhr.response)
+							
+							self.$setState({
+								loginError: responseObj.errors.message
+							})
 						}
 					});
 				});
