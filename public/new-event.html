@@ -21,7 +21,7 @@
 			  <div class="item-content item-input">
 				<div class="item-inner">
 				  <div class="item-input-wrap">
-					<input type="text" name="eventType" placeholder="Event Type" readonly="readonly" id="event-type-picker"/>
+					<input type="text" name="eventType" placeholder="Event Type" id="event-type-picker"/>
 				  </div>
 				</div>
 			  </div>
@@ -30,7 +30,7 @@
 			  <div class="item-content item-input">
 				<div class="item-inner">
 				  <div class="item-input-wrap">
-					<input type="text" name="venue" placeholder="Venue" readonly="readonly" id="venue-picker"/>
+					<input type="text" name="venue" placeholder="Venue" id="venue-picker"/>
 				  </div>
 				</div>
 			  </div>
@@ -39,7 +39,7 @@
 				<div class="item-content item-input">
 					<div class="item-inner">
 					  <div class="item-input-wrap">
-						<input type="text" name="startTime" placeholder="Start Time" readonly="readonly" id="start-time-picker"/>
+						<input type="text" name="startTime" placeholder="Start Time" id="start-time-picker"/>
 					  </div>
 					</div>
 				</div>
@@ -48,10 +48,12 @@
 				<div class="item-content item-input">
 					<div class="item-inner">
 					  <div class="item-input-wrap">
-						<input type="text" name="endTime" placeholder="End Time" readonly="readonly" id="end-time-picker"/>
+						<input type="text" name="endTime" placeholder="End Time" id="end-time-picker"/>
 					  </div>
 					</div>
 				</div>
+			</li>
+			<li>
 			</li>
 		  </ul>
 		</form>
@@ -250,6 +252,7 @@
 				
 				$$('.form-submit-button').on('click', function() {
 					var app = new Framework7();
+					
 					var formData = app.form.convertToData('#new-event-form');
 
 					// Replace Venue Name with Venue ID
