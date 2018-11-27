@@ -5,6 +5,7 @@ const session = require('express-session');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const errorHandler = require('errorhandler');
+const mysql = require('mysql');
 
 //Configure mongoose's promise to global promise
 mongoose.promise = global.Promise;
@@ -29,9 +30,16 @@ if(!isProduction) {
 mongoose.connect('mongodb://localhost/passport-tutorial');
 mongoose.set('debug', true);
 
+var conn = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "Iver4son3!",
+  database: "arlington_nightlife"
+});
+
 require('./models/Users');
 require('./config/passport');
-app.use(require('./routes'));
+app.use(require('./routes')(conn));
 
 //Error handlers & middlewares
 if(!isProduction) {

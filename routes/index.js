@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-router.use('/api', require('./api'));
+const setup = function(conn) {
+	router.use('/api', require('./api')(conn));
+}
 
-module.exports = router;
+module.exports = function(conn) {
+	setup(conn);
+	
+	return router;	
+}
