@@ -1,8 +1,11 @@
-var gulp = require('gulp'),
-  connect = require('gulp-connect');
- 
-gulp.task('connect', function() {
-  connect.server();
+// grab our gulp packages
+var gulp  = require('gulp'),
+    gutil = require('gulp-util');
+
+gulp.task('copy', function () {
+    gulp.src('./src/**/*')
+        .pipe(gulp.dest('./build/'));
+		
+    gulp.src('./node_modules/framework7/**/*')
+        .pipe(gulp.dest('./build/public/packages/framework7/'));
 });
- 
-gulp.task('default', ['connect']);
