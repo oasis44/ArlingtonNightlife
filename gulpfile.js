@@ -1,8 +1,13 @@
 // grab our gulp packages
-var gulp  = require('gulp'),
+var del = require('del'),
+	gulp  = require('gulp'),
     gutil = require('gulp-util');
+	
+gulp.task('clean', function(){
+	return del('./build/**/*');
+});
 
-gulp.task('copy', function () {
+gulp.task('copy', ['clean'], function () {
     gulp.src('./src/**/*')
         .pipe(gulp.dest('./build/'));
 		
