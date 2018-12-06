@@ -1,3 +1,5 @@
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Iver4son3!';
+
 CREATE DATABASE arlington_nightlife;
 
 USE arlington_nightlife;
