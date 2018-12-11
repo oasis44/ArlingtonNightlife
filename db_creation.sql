@@ -19,5 +19,4 @@ CREATE TABLE `events` (
   `end_time` datetime NOT NULL,
   `venue_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `venue_id` FOREIGN KEY (`id`) REFERENCES `venues` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
