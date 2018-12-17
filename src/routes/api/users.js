@@ -70,6 +70,12 @@ router.post('/login', auth.optional, (req, res, next) => {
   })(req, res, next);
 });
 
+router.get('/logout', auth.optional, (req, res, next) => {
+  req.session.destroy(function (err) {
+    res.redirect('/');
+  });
+});
+
 //GET current route (required, only authenticated users have access)
 router.get('/current', auth.required, (req, res, next) => {
   const { payload: { id } } = req;
