@@ -5,8 +5,16 @@ const mysql = require('mysql');
 const createRoutes = function(conn) {
 	router.get('/', auth.optional, (req, res, next) => {
 		const eventType = req.query.eventType;
+		
+		if (eventType === 'All Events') {
+			query = "SELECT venues.id as venue_id, name as venue_name, DATE_FORMAT(start_time, '%l:%i %p') as start_time, DATE_FORMAT(end_time, '%l:%i %p') as end_time FROM events, venues WHERE venues.id = events.venue_id"
+			params = []
+		} else {
+			query = "SELECT venues.id as venue_id, name as venue_name, DATE_FORMAT(start_time, '%l:%i %p') as start_time, DATE_FORMAT(end_time, '%l:%i %p') as end_time FROM events, venues WHERE venues.id = events.venue_id AND type = ?"
+			params = [eventType]
+		}
 
-		conn.query("SELECT venues.id as venue_id, name as venue_name, DATE_FORMAT(start_time, '%l:%i %p') as start_time, DATE_FORMAT(end_time, '%l:%i %p') as end_time FROM events, venues WHERE venues.id = events.venue_id AND type = ?", [eventType], function (err, result, fields) {
+		conn.query(query, params, function (err, result, fields) {
 			if (err) throw err;
 			res.send(result);
 		});
