@@ -57,9 +57,9 @@
 				<table>
 					<thead>
 						<tr>
-							<th class="label-cell">Event Type</th>
-							<th class="label-cell">Restaurant/Bar</th>
-							<th class="label-cell">Time</th>
+							<th class="label-cell sortable-cell" @click="sort('event_type')">Event Type</th>
+							<th class="label-cell sortable-cell" @click="sort('venue_name')">Restaurant/Bar</th>
+							<th class="label-cell sortable-cell" @click="sort('start_time')">Time</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -92,10 +92,10 @@
 		},
 		methods: {
 			fetchEvents() {
-				var self = this;
+				var self = this
 				
 				$$('select[name="eventSelect"] option:checked').each(function () {
-					var eventType = this.value;
+					var eventType = this.value
 					
 					self.$setState({
 						eventType: eventType
@@ -108,10 +108,24 @@
 					});
 				});
 			},
+			sort(sortBy) {
+				var self = this
+				
+				Framework7.request.get('/api/events', {'eventType': this.eventType, 'sortBy': sortBy}, function (data) {
+					self.$setState({
+						events: JSON.parse(data)
+					})
+				});
+			},
 			logout() {
+				var self = this
+			
 				Framework7.request.get('/api/users/logout', function (data) {
 					app.form.removeFormData('login')
-					mainView.router.navigate('/', {'reloadCurrent': true})
+					
+					self.$setState({
+						loginData: ''
+					})
 				});
 			}
 		},
@@ -125,6 +139,7 @@
 						loginData: loginData
 					})
 				}
+				
 				this.fetchEvents()
 			},
 			pageReinit() {

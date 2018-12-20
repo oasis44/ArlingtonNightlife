@@ -5,17 +5,20 @@ const mysql = require('mysql');
 const createRoutes = function(conn) {
 	router.get('/', auth.optional, (req, res, next) => {
 		const eventType = req.query.eventType;
+		const sortBy = req.query.sortBy ? req.query.sortBy : 'start_time'
 		
 		const mainQuery = "SELECT venues.id as venue_id, name as venue_name, DATE_FORMAT(start_time, '%l:%i %p') as start_time, DATE_FORMAT(end_time, '%l:%i %p') as end_time, events.type as event_type FROM events, venues WHERE venues.id = events.venue_id"
-		var queryStr = ""
+		var queryStr = ''
 		
 		if (eventType === 'All Events') {
 			queryStr = mainQuery
 			params = []
 		} else {
-			queryStr = mainQuery + " AND type = ?"
+			queryStr = mainQuery + ' AND type = ?'
 			params = [eventType]
 		}
+		
+		queryStr += ' ORDER BY ' + sortBy
 
 		conn.query(queryStr, params, function (err, result, fields) {
 			if (err) throw err;
@@ -41,5 +44,5 @@ const createRoutes = function(conn) {
 module.exports = function(conn) {
 	createRoutes(conn)
 	
-	return router;	
+	return router;
 }
