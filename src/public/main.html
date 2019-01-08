@@ -72,6 +72,31 @@
 						{{/each}}
 					</tbody>
 				</table>
+				
+				<form id="pagination-form">
+				<div class="data-table-footer">
+					<div class="data-table-rows-select" @change="countChange">
+						Per page:
+						<div class="input input-dropdown">
+							<select id="result-limit">
+								<option value="5">5</option>
+								<option value="10" selected>10</option>
+								<option value="25">25</option>
+								<option value="all">All</option>
+							</select>
+						</div>
+					</div>
+					<div class="data-table-pagination">
+						<span class="data-table-pagination-label">1-5 of 10</span>
+						<a href="#" class="link disabled">
+							<i class="icon icon-prev color-gray"></i>
+						</a>
+						<a href="#" class="link">
+							<i class="icon icon-next color-gray"></i>
+						</a>
+					</div>
+				</div>
+				</form>
 			</div>
 			
 			<!-- Link to another page -->
@@ -110,8 +135,11 @@
 			},
 			sort(sortBy) {
 				var self = this
+				var resultLimit = app.data['resultLimit'] ? app.data['resultLimit'] : 10
 				
-				Framework7.request.get('/api/events', {'eventType': this.eventType, 'sortBy': sortBy}, function (data) {
+				app.data['sortBy'] = sortBy
+				
+				Framework7.request.get('/api/events', {'eventType': this.eventType, 'sortBy': sortBy, 'resultLimit': resultLimit}, function (data) {
 					self.$setState({
 						events: JSON.parse(data)
 					})
@@ -125,6 +153,20 @@
 					
 					self.$setState({
 						loginData: ''
+					})
+				});
+			},
+			countChange() {
+				var self = this
+				var e = document.getElementById("result-limit");
+				var resultLimit = e.options[e.selectedIndex].value;
+				var sortBy = app.data['sortBy'] ? app.data['sortBy'] : 'start_time'
+				
+				app.data['resultLimit'] = resultLimit
+				
+				Framework7.request.get('/api/events', {'eventType': this.eventType, 'sortBy': sortBy, 'resultLimit': resultLimit}, function (data) {
+					self.$setState({
+						events: JSON.parse(data)
 					})
 				});
 			}
