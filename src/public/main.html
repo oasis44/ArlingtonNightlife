@@ -63,7 +63,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						{{#each events}}
+						{{#each displayEvents}}
 							<tr>
 								<td class="label-cell">{{event_type}}</td>
 								<td class="label-cell"><a href="/venues/{{venue_id}}">{{venue_name}}</a></td>
@@ -82,16 +82,15 @@
 								<option value="5">5</option>
 								<option value="10" selected>10</option>
 								<option value="25">25</option>
-								<option value="all">All</option>
 							</select>
 						</div>
 					</div>
 					<div class="data-table-pagination">
-						<span class="data-table-pagination-label">1-5 of 10</span>
-						<a href="#" class="link disabled">
+						<span class="data-table-pagination-label">{{startIndex}}-{{endIndex}} of {{eventCount}}</span>
+						<a href="#" class="link disabled" id="prev-link" @click="prevPage()">
 							<i class="icon icon-prev color-gray"></i>
 						</a>
-						<a href="#" class="link">
+						<a href="#" class="link" id="next-link" @click="nextPage()">
 							<i class="icon icon-next color-gray"></i>
 						</a>
 					</div>
@@ -107,41 +106,47 @@
 </template>
 <script>
 	return {
-		data: function () {
-			var self = this;
-			var app = self.$app;
-			
-			return {
-				events: []
-			}
-		},
 		methods: {
 			fetchEvents() {
 				var self = this
+				var resultLimit = this.resultLimit
 				
 				$$('select[name="eventSelect"] option:checked').each(function () {
 					var eventType = this.value
+
 					
 					self.$setState({
 						eventType: eventType
 					});
 				
 					Framework7.request.get('/api/events', {'eventType': eventType}, function (data) {
+						var allEvents = JSON.parse(data)
+						var finalIndex = allEvents.length
+						var endIndex = finalIndex <= resultLimit ? finalIndex : resultLimit
+					
 						self.$setState({
-							events: JSON.parse(data)
-						})
+							allEvents: allEvents,
+							displayEvents: allEvents.slice(0, endIndex),
+							startIndex: 1,
+							endIndex: endIndex,
+							finalIndex: finalIndex,
+							eventCount: allEvents.length
+						});
+						
+						if (self.endIndex === self.finalIndex)
+							document.getElementById("next-link").classList.add('disabled')
 					});
 				});
 			},
 			sort(sortBy) {
 				var self = this
-				var resultLimit = app.data['resultLimit'] ? app.data['resultLimit'] : 10
+				var resultLimit = this.resultLimit
 				
 				app.data['sortBy'] = sortBy
 				
 				Framework7.request.get('/api/events', {'eventType': this.eventType, 'sortBy': sortBy, 'resultLimit': resultLimit}, function (data) {
 					self.$setState({
-						events: JSON.parse(data)
+						displayEvents: JSON.parse(data)
 					})
 				});
 			},
@@ -157,28 +162,70 @@
 				});
 			},
 			countChange() {
-				var self = this
-				var e = document.getElementById("result-limit");
-				var resultLimit = e.options[e.selectedIndex].value;
-				var sortBy = app.data['sortBy'] ? app.data['sortBy'] : 'start_time'
+				var e = document.getElementById("result-limit")
+				var resultLimit = parseInt(e.options[e.selectedIndex].value);
 				
-				app.data['resultLimit'] = resultLimit
+				var endIndex = this.calculateEndIndex(1, resultLimit)
 				
-				Framework7.request.get('/api/events', {'eventType': this.eventType, 'sortBy': sortBy, 'resultLimit': resultLimit}, function (data) {
-					self.$setState({
-						events: JSON.parse(data)
-					})
-				});
+				this.$setState({
+					displayEvents: this.allEvents.slice(0, endIndex),
+					startIndex: 1,
+					endIndex: endIndex,
+					resultLimit: resultLimit
+				})
+				
+				document.getElementById("prev-link").classList.add('disabled')
+				
+				if (this.endIndex === this.finalIndex)
+					document.getElementById("next-link").classList.add('disabled')
+				else
+					document.getElementById("next-link").classList.remove('disabled')
+			},
+			calculateEndIndex(startIndex, resultLimit) {
+				var tempIndex = startIndex + resultLimit - 1;
+				return this.finalIndex <= tempIndex ? this.finalIndex : tempIndex
+			},
+			nextPage() {
+				var resultLimit = this.resultLimit
+				var startIndex = this.startIndex + resultLimit
+				var endIndex = this.calculateEndIndex(startIndex, resultLimit)
+
+				this.$setState({
+					displayEvents: this.allEvents.slice(startIndex - 1, endIndex),
+					startIndex: startIndex,
+					endIndex: endIndex
+				})
+				
+				document.getElementById("prev-link").classList.remove('disabled')
+				
+				if (this.endIndex === this.finalIndex)
+					document.getElementById("next-link").classList.add('disabled')
+			},
+			prevPage() {
+				var resultLimit = this.resultLimit
+				var startIndex = this.startIndex - resultLimit
+				var endIndex = this.calculateEndIndex(startIndex, resultLimit)
+
+				this.$setState({
+					displayEvents: this.allEvents.slice(startIndex - 1, endIndex),
+					startIndex: startIndex,
+					endIndex: endIndex
+				})
+				
+				document.getElementById("next-link").classList.remove('disabled')
+				
+				if (this.startIndex === 1)
+					document.getElementById("prev-link").classList.add('disabled')
 			}
 		},
 		on: {
 			pageInit() {
-				var self = this;
 				var loginData = app.form.getFormData('login')
 
 				if (loginData) {
-					self.$setState({
-						loginData: loginData
+					this.$setState({
+						loginData: loginData,
+						resultLimit: 10
 					})
 				}
 				
